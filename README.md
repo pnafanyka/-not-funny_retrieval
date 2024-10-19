@@ -8,9 +8,11 @@
 1. Скачать репозиторий командой
    
     git clone https://github.com/pnafanyka/-not-funny_retrieval
-2.  Прописать для установки всех необходимых зависимостей
-   
-    pip install requirements.txt
+
+2.  Прописать для установки всех необходимых зависимостей команду, находясь в репозитории
+
+    pip install -r requirements.txt
+
 3.  Прописать следующую команду, выбрав векторизацию
    
     python3 main_search.py --query "Кошка и собака" --model 'tfidf|bert' --top_n 2 
