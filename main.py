@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from database import DB_Session
 from tfidf_search import TFIDF_SEARCH
-from bert_search import BERT_SEARCH
+from embed_search import EMBED_SEARCH
 import os
 import json
 import time
@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Создаем объекты для моделей и БД
 tf_search = TFIDF_SEARCH()
-bert = BERT_SEARCH()
+embed = EMBED_SEARCH()
 db_session = DB_Session()
 
 # Cоздаем объект класса фастапи
@@ -35,10 +35,10 @@ def perform_search(model_type: str, query: str, top_n: int):
     """
     if model_type == "tfidf":
         return tf_search.search_jokes(query, top_n)
-    elif model_type == "bert":
-        return bert.search_jokes(query, top_n)
+    elif model_type == "embed":
+        return embed.search_jokes(query, top_n)
     else:
-        raise ValueError("Такой модели нет. Выберите 'tfidf' или 'bert'.")
+        raise ValueError("Такой модели нет. Выберите 'tfidf' или 'embed'.")
 
 def perform_cli_search(model_type: str, query: str, top_n: int):
     """
@@ -46,10 +46,10 @@ def perform_cli_search(model_type: str, query: str, top_n: int):
     """
     if model_type == "tfidf":
         return tf_search.cli_search_jokes(query, top_n)
-    elif model_type == "bert":
-        return bert.cli_search_jokes(query, top_n)
+    elif model_type == "embed":
+        return embed.cli_search_jokes(query, top_n)
     else:
-        raise ValueError("Такой модели нет. Выберите 'tfidf' или 'bert'.")
+        raise ValueError("Такой модели нет. Выберите 'tfidf' или 'embed'.")
     
 # Поисковый эндпоинт
 @app.post("/search")

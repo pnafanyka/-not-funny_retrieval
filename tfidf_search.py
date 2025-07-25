@@ -58,6 +58,27 @@ class TFIDF_SEARCH():
         output_list = []
 
         for joke in sorted_jokes[:n]:
+            # output_list.append(self.jokes[joke[0]])
             output_list.append(self.jokes[joke[0]])
+        return output_list
+    
+    def cli_search_jokes(self, query: str, n: int) -> list:
+        '''
+        Функция ищет n-самых релевантных анекдотов
+        '''
+        query_terms = self.preprocess_query(query)
+        joke_scores = defaultdict(float)  
+        
+        for term in query_terms:
+            if term in self.inverted_index:
+                for joke_id, score in self.inverted_index[term]:
+                    joke_scores[joke_id] += score 
 
+        # Отсортируем шутки по релевантности
+        sorted_jokes = sorted(joke_scores.items(), key=lambda item: item[1], reverse=True)
+        output_list = []
+
+        for joke in sorted_jokes[:n]:
+            # output_list.append(self.jokes[joke[0]])
+            output_list.append([self.jokes[joke[0]], round(joke[1], 2)])
         return output_list

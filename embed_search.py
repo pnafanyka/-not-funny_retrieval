@@ -1,13 +1,12 @@
-from transformers import AutoTokenizer, BertModel
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import os
 import json
 
-class BERT_SEARCH():
+class EMBED_SEARCH():
     '''
-    Класс для поиска через эмюеддинги БЕРТа
+    Класс для поиска через эмбеддинги и косинусное расстояние
     '''
     model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
     #модель выбрана с HuggingFace по встроенным фильтрам
@@ -29,5 +28,19 @@ class BERT_SEARCH():
         output_list = []
         for id in top_k_indices:
             output_list.append(self.jokes[id])
+
+        return output_list
+    
+    def cli_search_jokes(self, query: str, n: int) -> list:
+        '''
+        Функция находит n-самых близких шуток к запросу
+        '''
+        query_embed = query_embed = self.model.encode(query)
+        similarities = cosine_similarity(query_embed.reshape(1, -1), self.joke_embeds)
+        top_k_indices = np.argsort(similarities[0])[-n:][::-1]
+
+        output_list = []
+        for id in top_k_indices:
+            output_list.append([self.jokes[id], round(similarities[0][id], 2)])
 
         return output_list

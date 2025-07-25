@@ -73,6 +73,7 @@ class DB_Session():
             self.session.close()
             return f"Error: {e}"
 
+
 if __name__ == "__main__":
     session = DB_Session()
-    print(session.delete_user("хуй"))
+    print(session.table_lookup("users"))
